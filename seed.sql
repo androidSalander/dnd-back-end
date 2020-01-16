@@ -55,20 +55,98 @@ INSERT INTO characters VALUES (
   "1d6"
 );
 INSERT INTO characters VALUES (
+  "Chang Chang Chang",
+	"Barbarian",
+	"Dragonborn",
+	"Male",
+	"Medium",
+	17,
+	"Draconic",
+	30,
+	18,
+	12,
+	17,
+	11,
+	11,
+	16,
+	15,
+	"1d12"
+);
+INSERT INTO characters VALUES (
   "Kat Danger",
-  "Warlock",
-  "Tiefling",
+  "Druid",
+  "Wood Elf",
   "404 Not Found",
   "Medium",
-  26,
-  "Infernal",
+  126,
+  "Elvish",
   30,
-  9,
+  8,
+  12,
+  16,
+  14,
+  17,
+  12,
+  11,
+  "1d8"
+);
+INSERT INTO characters VALUES (
+  "Gladd Todfelter",
+  "Ranger",
+  "Half-Orc",
+  "Male",
+  "Medium",
+  34,
+  "Orc",
+  30,
+  15,
+  16,
   12,
   14,
+  13,
+  15,
+  9,
+  "1d8"
+);
+INSERT INTO characters VALUES (
+  "Joshua",
+  "Rogue",
+  "Gnome",
+  "Male",
+  "Small",
+  44,
+  "Gnomish",
+  25,
   14,
-  10,
-  17,
+  16,
+  14,
+  18,
+  11,
+  12,
   10,
   "1d8"
-)
+);
+
+DROP TABLE IF EXISTS users;
+
+CREATE TABLE users (
+  username TEXT,
+  email TEXT,
+  password TEXT
+);
+
+INSERT INTO users VALUES (
+  "MapleLeafTakeshi",
+  "brockWC@brock.li",
+  "pewtercity"
+);
+INSERT INTO users VALUES (
+  "TylerTheDestroyer",
+  "tylerL@underwater.pizza",
+  "reactSUX"
+);
+INSERT INTO users VALUES (
+  "MisterDungeonMaster",
+  "katM@datalore.digital",
+  "iAMthebonanaking"
+);
