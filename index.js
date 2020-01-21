@@ -1,5 +1,7 @@
 let express = require('express')
 let db = require('./database.js')
+let bcrypt = require('bcryptjs')
+let jwt = require('jsonwebtoken')
 
 let app = express()
 

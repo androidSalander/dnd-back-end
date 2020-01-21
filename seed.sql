@@ -19,7 +19,7 @@ CREATE TABLE characters (
   hit_dice TEXT);
 
 INSERT INTO characters VALUES (
-  "Brock Whitebread",
+  "Brock WC",
   "Bard",
   "Dwarf",
   "Male",
