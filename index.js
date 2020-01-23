@@ -2,8 +2,12 @@ let express = require('express')
 let db = require('./database.js')
 let bcrypt = require('bcryptjs')
 let jwt = require('jsonwebtoken')
+let validate = require('./validation')
+let authRequired = require('./authRequired')
 
 let app = express()
+
+require('dotenv').config()
 
 app.use(express.json())
 
@@ -22,7 +26,7 @@ const PORT = 9000
 ////////////////////
 
 //get all characters ✅
-app.get('/characters', (req, res) => {
+app.get('/characters', authRequired, (req, res) => {
   const getCharacters = 'SELECT oid, * FROM characters'
 
   db.all(getCharacters, (error, results) => {
@@ -146,11 +150,10 @@ app.put('/characters/:id', (req, res) => {
 //delete character ✅
 app.delete('/characters/:id', (req, res) => {
   const characterId = req.params.id
-  const deleteCharacter =
-  `DELETE FROM characters
-  WHERE characters.oid = ${characterId}`
+  console.log(characterId)
+  const deleteCharacter = `DELETE FROM characters WHERE characters.oid = ?`
 
-  db.all(deleteCharacter, (error, result) => {
+  db.all(deleteCharacter, [characterId], (error, result) => {
     if(error) {
       console.log('critical miss', error)
       res.sendStatus(500)
@@ -161,6 +164,120 @@ app.delete('/characters/:id', (req, res) => {
   })
 })
 
+/////////////
+//USER AUTH//
+////////////
+
+// register user
+app.post('/register', (req, res) => {
+  let { errors, notValid } = validate(req.body)
+
+  if (notValid) {
+    return res.status(400).json({ status: 400, errors })
+  }
+
+  let verifyUser = `SELECT * FROM users WHERE users.email = ${req.body.email}`
+
+  db.all(verifyUser, (err, verifiedUser) => {
+    if (verifiedUser) {
+      return res.status(400).json({
+        status: 400,
+        message: 'email already in use...please try again'
+      })
+    }
+    let createNewUser = `INSERT INTO users VALUES (?, ?, ?)`
+    bcrypt.genSalt(10, (err, salt) => {
+      if (err) {
+        return res.status(500).json({
+          status: 500,
+          message: 'something went wrong...please try again'
+        })
+      }
+      bcrypt.hash(req.body.password, salt, (err, hash) => {
+        if (err) {
+          return res.status(500).json({
+            status: 500,
+            message: 'something went wrong...please try again'
+          })
+        }
+        db.run(createNewUser, [req.body.username, req.body.email, hash], (err) => {
+          if (err) {
+            console.log(err)
+            return res.status(500).json({
+              status: 500,
+              err
+            })
+          } else {
+            res.status(201).json({
+              status: 201,
+              message: 'success!'
+            })
+          }
+        })
+      })
+    })
+
+  })
+})
+
+// login user
+app.post('/login', (req, res) => {
+  if (!req.body.username || !req.body.password) {
+    return res.status(400).json({
+      status: 400,
+      message: 'please enter username and password'
+    })
+  }
+
+  let verifyUser = `SELECT * FROM users WHERE users.username = ?`
+  db.all(verifyUser, [req.body.username], (err, verifiedUser) => {
+    if (err) {
+      return res.status(500).json({
+        status: 500,
+        message: 'something went wrong...please try again'
+      })
+    } else if (!verifiedUser) {
+      return res.status(400).json({
+        status: 400,
+        message: 'username or password is incorrect'
+      })
+    } else {
+      bcrypt.compare(req.body.password, verifiedUser[0].password, (err, isMatch) => {
+        if (err) {
+          return res.status(500).json({
+            status: 500,
+            message: 'something went wrong...please try again'
+          })
+        } else if (!isMatch) {
+          return res.status(400).json({
+            status: 400,
+            message: 'something went wront...please try again'
+          })
+        } else if (isMatch) {
+          let user = {
+            id: verifiedUser[0].rowid
+          }
+          jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1hr" }, (err, signedJwt) => {
+            if (err) {
+              return res.status(500).json({
+                status: 500,
+                message: 'something went wrong...try again'
+              })
+            }
+            return res.status(200).json({
+              status: 200,
+              message: 'success',
+              id: verifiedUser[0].rowid,
+              signedJwt
+            })
+          })
+        }
+      })
+    }
+  })
+})
+
+// logout
 
 app.listen(PORT, () => {
   console.log(`the epic tale begins on port ${PORT}`)

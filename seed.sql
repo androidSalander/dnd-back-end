@@ -126,6 +126,78 @@ INSERT INTO characters VALUES (
   10,
   "1d8"
 );
+INSERT INTO characters VALUES (
+  "Mallory",
+  "Bard",
+  "Half-Elf",
+  "Female",
+  "Medium",
+  32,
+  "Elvish, French",
+  30,
+  8,
+  16,
+  14,
+  10,
+  9,
+  18,
+  10,
+  "1d8"
+);
+INSERT INTO characters VALUES (
+  "Felipe",
+  "Bard",
+  "Half-Elf",
+  "Male",
+  "Medium",
+  29,
+  "Elvish, Spanish",
+  30,
+  9,
+  17,
+  13,
+  12,
+  11,
+  18,
+  9,
+  "1d8"
+);
+INSERT INTO characters VALUES (
+  "Umar Richy Rich",
+  "Wizard",
+  "Elf",
+  "Male",
+  "Medium",
+  130,
+  "Elvish",
+  30,
+  9,
+  13,
+  15,
+  16,
+  10,
+  15,
+  9,
+  "1d6"
+);
+INSERT INTO characters VALUES (
+  "James Woods",
+  "Druid",
+  "Dragonborn",
+  "Male",
+  "Medium",
+  18,
+  "Draconic",
+  30,
+  11,
+  13,
+  14,
+  14,
+  18,
+  12,
+  10,
+  "1d8"
+);
 
 DROP TABLE IF EXISTS users;
 

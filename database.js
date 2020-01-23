@@ -24,9 +24,21 @@ const charactersTableQuery =
   hit_points INTEGER,
   hit_dice TEXT)`
 
+const usersTableQuery =
+`CREATE TABLE IF NOT EXISTS users (
+  username TEXT,
+  email TEXT,
+  password TEXT
+)`
+
   db.run(charactersTableQuery, error => {
     if(error) console.log("critical hit - character table down")
     else console.log("critical success - character table created")
+  })
+
+  db.run(usersTableQuery, error => {
+    if(error) console.log("critical hit - user table down")
+    else console.log("critical success - user table created")
   })
 
   module.exports = db
